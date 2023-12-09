@@ -12,8 +12,8 @@ app.use(cors());
 // Router
 app.use(router);
 
-app.listen(envConfig.PORT, (): void => {
-  console.log(`Server started on http://localhost:${envConfig.PORT}`);
+app.listen(envConfig.PORT || 3000, (): void => {
+  console.log(`Server started on http://localhost:${envConfig.PORT || 3000}`);
 });
 
 export default app;
