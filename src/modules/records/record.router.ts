@@ -9,7 +9,7 @@ const upload: multer.Multer = multer({
     file: Express.Multer.File,
     callback: multer.FileFilterCallback,
   ): void {
-    if (["application/xml", "text/csv"].includes(file.mimetype)) {
+    if (["text/xml", "application/xml", "text/csv"].includes(file.mimetype)) {
       callback(null, true);
       return;
     }

@@ -10,12 +10,13 @@ export const upload = async (
 ): Promise<{ success: boolean; message?: string }> => {
   let records: Array<IRecord>;
   try {
-    if (file.mimetype === "application/xml") {
+    if (file.mimetype === "text/xml" || file.mimetype === "application/xml") {
       const xmlContent: string = file.buffer.toString("utf-8");
       const parser: XMLParser = new XMLParser({
         ignoreAttributes: false,
         attributeNamePrefix: "",
       });
+
       const {
         records: { record },
       } = parser.parse(xmlContent);
@@ -112,5 +113,6 @@ export const upload = async (
 
   return {
     success: !content.length,
+    message: content.join("\n"),
   };
 };
