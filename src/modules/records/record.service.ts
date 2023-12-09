@@ -105,10 +105,12 @@ export const upload = async (
     }
   }
   if (content.length) {
-    await fs.writeFile(
+    fs.writeFile(
       `files/${file.originalname.split(".")[0]}-${Date.now()}.txt`,
       content.join("\n"),
-    );
+    )
+      .then()
+      .catch((err) => console.log(err.message));
   }
 
   return {
