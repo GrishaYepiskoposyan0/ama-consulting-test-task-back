@@ -3,34 +3,42 @@ import { XMLParser } from "fast-xml-parser";
 import { Converter } from "csvtojson/v2/Converter";
 import csv from "csvtojson/index";
 import fs from "node:fs/promises";
+import { recordStructureValidation } from "../../common/utils/record-structure.validation";
 
 export const upload = async (
   file: Express.Multer.File,
-): Promise<{ success: boolean }> => {
+): Promise<{ success: boolean; message?: string }> => {
   let records: Array<IRecord>;
-  if (file.mimetype === "application/xml") {
-    const xmlContent: string = file.buffer.toString("utf-8");
-    const parser: XMLParser = new XMLParser({
-      ignoreAttributes: false,
-      attributeNamePrefix: "",
-    });
-    const {
-      records: { record },
-    } = parser.parse(xmlContent);
-    records = record;
-  } else {
-    const converter: Converter = csv({
-      trim: true,
-      headers: [
-        "reference",
-        "accountNumber",
-        "description",
-        "startBalance",
-        "mutation",
-        "endBalance",
-      ],
-    });
-    records = await converter.fromString(file.buffer.toString());
+  try {
+    if (file.mimetype === "application/xml") {
+      const xmlContent: string = file.buffer.toString("utf-8");
+      const parser: XMLParser = new XMLParser({
+        ignoreAttributes: false,
+        attributeNamePrefix: "",
+      });
+      const {
+        records: { record },
+      } = parser.parse(xmlContent);
+      records = record;
+    } else {
+      const converter: Converter = csv({
+        trim: true,
+        headers: [
+          "reference",
+          "accountNumber",
+          "description",
+          "startBalance",
+          "mutation",
+          "endBalance",
+        ],
+      });
+      records = await converter.fromString(file.buffer.toString());
+    }
+  } catch {
+    return { success: false, message: "Invalid File!" };
+  }
+  if (!recordStructureValidation(records)) {
+    return { success: false, message: "Invalid File!" };
   }
   const content: Array<string> = [];
 
@@ -63,7 +71,11 @@ export const upload = async (
 
     if (balance !== +current.endBalance) {
       content.push(
-        `Transaction with reference ${current.reference} has anomaly: Invalid End Balance! ${current.startBalance}${current.mutation} != ${current.endBalance}\n`,
+        `Transaction with reference ${
+          current.reference
+        } has anomaly: Invalid End Balance! ${current.startBalance}${
+          current.mutation > 0 && "+"
+        }${current.mutation} != ${current.endBalance}\n`,
       );
     }
     if (map[key].length !== 0) {
@@ -81,7 +93,11 @@ export const upload = async (
 
         if (balance !== +currentRecord.endBalance) {
           content.push(
-            `Transaction with reference ${currentRecord.reference} has anomaly: Invalid End Balance! ${currentRecord.startBalance}${currentRecord.mutation} != ${currentRecord.endBalance}\n`,
+            `Transaction with reference ${
+              currentRecord.reference
+            } has anomaly: Invalid End Balance! ${currentRecord.startBalance}${
+              currentRecord.mutation > 0 && "+"
+            }${currentRecord.mutation} != ${currentRecord.endBalance}\n`,
           );
         }
       }

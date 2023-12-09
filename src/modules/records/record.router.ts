@@ -8,7 +8,7 @@ const upload: multer.Multer = multer({
     req: Request,
     file: Express.Multer.File,
     callback: multer.FileFilterCallback,
-  ) {
+  ): void {
     if (["application/xml", "text/csv"].includes(file.mimetype)) {
       callback(null, true);
       return;
@@ -18,3 +18,5 @@ const upload: multer.Multer = multer({
 });
 
 recordRouter.post("/upload", upload.single("file"), routerController.upload);
+recordRouter.get("/:filename", routerController.getFile);
+recordRouter.get("/", routerController.getAllFilenames);

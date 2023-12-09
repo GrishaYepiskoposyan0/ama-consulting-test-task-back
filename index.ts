@@ -1,9 +1,14 @@
 import express from "express";
 import { envConfig } from "./src/common/config/envConfig";
 import { router } from "./src/common/router";
+import cors from "cors";
 
 const app: express.Express = express();
 
+// Middlewares
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cors());
 // Router
 app.use(router);
 
