@@ -45,6 +45,6 @@ npm run start:dev
 ## Deployment links.
 I have developed a frontend application that makes it easy to test the application.
 
-[https://ama-consulting-test-task-front.vercel.app](https://link-url-here.org)
+[https://ama-consulting-test-task-front.vercel.app](https://ama-consulting-test-task-front.vercel.app)
 
 ## Thank you!!!
