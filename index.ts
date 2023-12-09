@@ -15,3 +15,5 @@ app.use(router);
 app.listen(envConfig.PORT, (): void => {
   console.log(`Server started on http://localhost:${envConfig.PORT}`);
 });
+
+export default app;
