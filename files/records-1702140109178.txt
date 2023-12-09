@@ -1,7 +1,0 @@
-Transaction with reference 112806 has anomaly: It is duplicated! There is 3 duplicates
-
-Transaction with reference 137758 has anomaly: Invalid Start Balance!
-Previous end balance is not equal to current start balance: -32.29 != 97.56
-
-Transaction with reference 141007 has anomaly: Invalid Start Balance!
-Previous end balance is not equal to current start balance: 91.14 != 66.35
